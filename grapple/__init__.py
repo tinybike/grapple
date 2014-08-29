@@ -53,7 +53,7 @@ np.set_printoptions(linewidth=500)
 RIPPLE_EPOCH = 946684800
 
 # postgres connection
-conn = db.connect("host=localhost dbname=analytics user=analytics")
+conn = db.connect("host=localhost dbname=grapple user=grapple")
 conn.set_isolation_level(ext.ISOLATION_LEVEL_READ_COMMITTED)
 
 class Grapple(object):
