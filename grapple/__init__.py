@@ -6,6 +6,11 @@ Downloads data from rippled via websocket.
 """
 from __future__ import division
 import sys
+try:
+    import cdecimal
+    sys.modules["decimal"] = cdecimal
+except:
+    pass
 import os
 import getopt
 import json
@@ -19,9 +24,22 @@ from contextlib import contextmanager
 import pandas as pd
 import pandas.io.sql as psql
 import numpy as np
-import psycopg2 as db
-import psycopg2.extensions as ext
-from psycopg2.extras import RealDictCursor
+try:
+    import psycopg2 as db
+    import psycopg2.extensions as ext
+    from psycopg2.extras import RealDictCursor
+except:
+    import psycopg2cffi as db
+    import psycopg2cffi.extensions as ext
+    from psycopg2cffi.extras import RealDictCursor
+
+__title__      = "grapple"
+__version__    = "0.1"
+__author__     = "Jack Peterson"
+__copyright__  = "Copyright 2014, Jack Peterson"
+__license__    = "MIT"
+__maintainer__ = "Jack Peterson"
+__email__      = "jack@tinybike.net"
 
 getcontext().prec = 28
 getcontext().rounding = ROUND_HALF_EVEN
@@ -35,7 +53,7 @@ np.set_printoptions(linewidth=500)
 RIPPLE_EPOCH = 946684800
 
 # postgres connection
-conn = db.connect("host=localhost dbname=dbname user=username")
+conn = db.connect("host=localhost dbname=analytics user=analytics")
 conn.set_isolation_level(ext.ISOLATION_LEVEL_READ_COMMITTED)
 
 class Grapple(object):
@@ -397,11 +415,11 @@ class Grapple(object):
             cur.execute("SELECT clean_data_tables()")
 
     def update_loop(self, interval=900):
-        """
-        Fetch data from rippled every (interval) seconds.
+        """Fetch data from rippled every (interval) seconds.
 
         Walk from the current ledger to the ledger index specified in the "halt"
-        parameter, downloading transactions from rippled.        
+        parameter, downloading transactions from rippled.
+        
         """
         first = self.setup
         if first:
@@ -459,7 +477,8 @@ def main(argv=None):
         'setup': True,
         'precision': 28,
         'socket_url': 'ws://127.0.0.1:6006/',
-        'halt': 152370,  # Genesis ledger
+        # 'halt': 152370,  # Genesis ledger
+        'halt': 8141600,
     }
     for opt, arg in opts:
         if opt in ('-h', '--help'):

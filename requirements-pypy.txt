@@ -1,0 +1,4 @@
+cffi
+psycopg2cffi
+requests
+websocket
