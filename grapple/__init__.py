@@ -477,8 +477,7 @@ def main(argv=None):
         'setup': True,
         'precision': 28,
         'socket_url': 'ws://127.0.0.1:6006/',
-        # 'halt': 152370,  # Genesis ledger
-        'halt': 8141600,
+        'halt': 152370,  # Genesis ledger
     }
     for opt, arg in opts:
         if opt in ('-h', '--help'):
