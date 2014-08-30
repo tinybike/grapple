@@ -16,8 +16,6 @@ setup(
     url="https://github.com/tensorjack/grapple",
     download_url = 'https://github.com/tensorjack/grapple/tarball/0.1',
     packages=["grapple"],
-    include_package_data=True,
-    package_data={"grapple": ["./data/coins.json", "./bitcoin-listen"]},
-    install_requires=["psycopg2",],
-    keywords = ["ripple", "rippled", "download", "data"]
+    install_requires=["psycopg2", "requests", "websocket", "numpy", "pandas"],
+    keywords = ["ripple", "rippled", "ledger", "download", "data"]
 )

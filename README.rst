@@ -13,7 +13,9 @@ Installation::
 
     pip install grapple
 
-Grapple is designed to integrate with PostgreSQL, using connection information in config.py.  By default, it assumes that your database is located on localhost (127.0.0.1), and that your database username, password, and password are all "grapple".  (This is obviously not the most secure setup, but it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
+Grapple is designed to integrate with PostgreSQL, using connection information in config.py.  By default, it assumes that your database is located on localhost (127.0.0.1), and that your database username, password, and password are all "grapple".
+
+(While this is certainly not the most secure setup, it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
 
 Usage as a Python module::
 

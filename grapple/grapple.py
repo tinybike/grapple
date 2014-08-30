@@ -22,7 +22,7 @@ in config.py.  By default, it assumes that your database is located on
 localhost (127.0.0.1), and that your database username, password, and password
 are all "grapple".
 
-(This is obviously not the most secure setup, but it may be convenient for
+(While this is certainly not the most secure setup, it may be convenient for
 people who install Grapple via pip, and do not wish to edit its source code.)
 
 Usage as a Python module:
@@ -61,27 +61,17 @@ try:
     sys.modules["decimal"] = cdecimal
 except:
     pass
-import os
 import getopt
 import json
-import csv
-import time
-import platform
 import websocket
-import requests
 from decimal import Decimal, getcontext, ROUND_HALF_EVEN
 from contextlib import contextmanager
 import pandas as pd
 import pandas.io.sql as psql
 import numpy as np
-try:
-    import psycopg2 as db
-    import psycopg2.extensions as ext
-    from psycopg2.extras import RealDictCursor
-except:
-    import psycopg2cffi as db
-    import psycopg2cffi.extensions as ext
-    from psycopg2cffi.extras import RealDictCursor
+import psycopg2 as db
+import psycopg2.extensions as ext
+from psycopg2.extras import RealDictCursor
 from config import *
 
 getcontext().rounding = ROUND_HALF_EVEN
@@ -391,7 +381,6 @@ class Grapple(object):
         queries = (
             "DROP TABLE IF EXISTS ripple_ledger CASCADE",
             "DROP TABLE IF EXISTS resampled_ledger CASCADE",
-            "DROP TABLE IF EXISTS currencies CASCADE",
             (
                 "CREATE TABLE resampled_ledger ("
                 "starttime bigint,"
@@ -409,11 +398,6 @@ class Grapple(object):
                 "volume1 numeric(24,8),"
                 "volume2 numeric(24,8),"
                 "medprice1 numeric(24,8))"
-            ), (
-                "CREATE TABLE currencies ("
-                "ticker varchar(10) NOT NULL PRIMARY KEY,"
-                "name varchar(100),"
-                "data_source varchar(1000))"
             ), (
                 "CREATE TABLE ripple_ledger ("
                 "internalid bigserial NOT NULL PRIMARY KEY,"
