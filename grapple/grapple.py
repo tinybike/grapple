@@ -45,7 +45,7 @@ Optional flags:
         Use Ripple Labs' public websocket, wss://s1.ripple.com:51233.
 
     -f, --full:
-        Download the full Ripple ledger.  (Automatic on your first run.)
+        Download the full Ripple ledger.  Automatic on first run.
 
     -g, --genesis:
         Halting point for full downloads; ignored for partial downloads.

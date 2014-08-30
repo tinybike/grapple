@@ -37,4 +37,10 @@ Optional flags::
         Use Ripple Labs' public websocket, wss://s1.ripple.com:51233.
 
     -f, --full:
-        Resets the database tables.
+        Download the full Ripple ledger.  Automatic on your first run.
+
+    -g, --genesis:
+        Halting point for full downloads; ignored for partial downloads.
+
+    -q, --quiet:
+        Suppress command line output.
