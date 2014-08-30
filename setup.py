@@ -7,7 +7,7 @@ except ImportError:
 setup(
     name="grapple",
     version="0.1",
-    description="Downloads data from rippled via websocket",
+    description="Download the Ripple ledger directly from rippled.",
     author="Jack Peterson",
     author_email="<jack@tinybike.net>",
     maintainer="Jack Peterson",
