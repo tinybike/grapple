@@ -9,7 +9,10 @@ Grapple can collect data from a local or remote rippled instance.  If you have a
 
 Also resamples the transaction time series to create "Open-Hi-Lo-Close" data, which can be useful for statistical tests, or simply for drawing charts.
 
-Installation::
+Installation
+^^^^^^^^^^^^
+
+The easiest way to install Grapple is using pip::
 
     pip install grapple
 
@@ -17,14 +20,17 @@ Grapple is designed to integrate with PostgreSQL, using connection information i
 
 (While this is certainly not the most secure setup, it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
 
-Usage as a Python module::
+Usage
+^^^^^
+
+Grapple can be used as a Python module::
 
     from grapple import Grapple
 
     grapple = Grapple()
     grapple.download()
 
-Usage as a script::
+It can also be run as a script::
 
     python grapple.py [-flags]
 
