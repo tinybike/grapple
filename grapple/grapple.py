@@ -1,9 +1,13 @@
 #!/usr/bin/env python
-"""Download the Ripple ledger directly from rippled.
+"""Download the Ripple ledger from rippled.
 
 Grapple extracts the ledger from rippled via websocket.  It starts at the
 current ledger index, and walks backwards until it reaches the genesis ledger.
-The genesis ledger index is set by default to 152370, but is adjustable.
+The genesis ledger index is set by default to 152370.
+
+If you have previously run Grapple, data will only be collected from the
+current ledger to the maximum ledger index previously recorded.  Just set
+the "full" flag if you prefer to re-download the entire ledger.
 
 Grapple can collect data from a local or remote rippled instance.  If you have
 a local rippled instance running that has downloaded all or most of the ledger,
@@ -12,6 +16,14 @@ public websocket is very slow!
 
 Also resamples the transaction time series to create "Open-Hi-Lo-Close" data,
 which can be useful for statistical tests, or simply for drawing charts.
+
+Grapple is designed to integrate with PostgreSQL, using connection information
+in config.py.  By default, it assumes that your database is located on
+localhost (127.0.0.1), and that your database username, password, and password
+are all "grapple".
+
+(This is obviously not the most secure setup, but it may be convenient for
+people who install Grapple via pip, and do not wish to edit its source code.)
 
 Usage as a Python module:
 
@@ -33,7 +45,13 @@ Optional flags:
         Use Ripple Labs' public websocket, wss://s1.ripple.com:51233.
 
     -f, --full:
-        Download the full Ripple ledger.
+        Download the full Ripple ledger.  (Automatic on your first run.)
+
+    -g, --genesis:
+        Halting point for full downloads; ignored for partial downloads.
+
+    -q, --quiet:
+        Suppress command line output.
 
 """
 from __future__ import division
@@ -305,7 +323,7 @@ class Grapple(object):
             cur.execute(query, tuple(row))
             self.updates += 1
 
-    def resample_time_series(self, drop):
+    def resample_time_series(self):
         """OHLC time series resampler.
         
         Resamples time series data to create Open-Hi-Lo-Close (OHLC) data,
@@ -328,7 +346,7 @@ class Grapple(object):
                 sys.stdout.flush()
 
                 # Resample all transactions
-                if drop:
+                if self.full:
                     query = (
                         "SELECT currency1, currency2, price1, price2, "
                         "amount1, amount2, txdate FROM ripple_ledger "
@@ -435,7 +453,6 @@ class Grapple(object):
         if self.rippled_connect():
             self.get_current_index()
             if not self.full:
-                print "\n***Fetching new ledgers***\n"
                 self.find_target_ledger()
             print "Reading from ledger", self.ledger_current_index, "to", self.halt
             self.ledgers_to_read = self.ledger_current_index - self.halt
@@ -524,7 +541,6 @@ def main(argv=None):
     parameters = {
         'full': False,
         'genesis': 152370,
-        # 'genesis': 8141600,
         'quiet': False,
     }
     for opt, arg in opts:
