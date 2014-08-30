@@ -32,6 +32,28 @@ Usage as a Python module:
     grapple = Grapple()
     grapple.download()
 
+The Grapple constructor accepts the following keyword arguments:
+
+    socket_url (str):
+        rippled websocket URL (default="ws://127.0.0.1:6006/")
+
+    full (bool):
+        True if downloading the full ledger (starting from the current ledger
+        and walking back to the genesis ledger). False if the download should
+        stop at the last current ledger (i.e., the last time grapple was run).
+        (default=True)
+
+    genesis (int):
+        Genesis block index.  If full=True, this is where the download ends;
+        otherwise, this value is ignored. (default=152370)
+    
+    quiet (bool):
+        If True, suppress console output. (default=True)
+    
+    resampling_frequencies (tuple):
+        Resampling frequencies, using pandas frequency codes.  If None, then
+        resampling is disabled. (default=('D',) or daily)
+
 Usage as a script:
 
     python grapple.py [-flags]
@@ -86,7 +108,7 @@ class Grapple(object):
                  genesis=152370, quiet=True, resampling_frequencies=('D',)):
         """
         Args:
-          socket_url (str): rippled websocket URL (default=ws://127.0.0.1:6006/)
+          socket_url (str): rippled websocket URL (default="ws://127.0.0.1:6006/")
           full (bool): True if downloading the full ledger (starting from the
                        current ledger and walking back to the genesis ledger).
                        False if the download should stop at the last current
@@ -143,9 +165,8 @@ class Grapple(object):
                         'tx_hash': tx_hash,
                     }
                     return tx_data['result'], options
-        except Exception as e:
-            print e
-            import pdb; pdb.set_trace()
+        except Exception as exc:
+            print exc
         return False, False
 
     def parse_tx(self, tx, accepted, ledger_time=None, tx_hash=None):
@@ -234,7 +255,6 @@ class Grapple(object):
                                 stored_tx_count += 1
                         except Exception as exc:
                             print exc
-                            import pdb; pdb.set_trace()
         return stored_tx_count
 
     def parse_ledger(self, data):

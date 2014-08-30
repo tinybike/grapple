@@ -30,6 +30,28 @@ Grapple can be used as a Python module::
     grapple = Grapple()
     grapple.download()
 
+The Grapple constructor accepts the following keyword arguments:
+
+    socket_url (str):
+        rippled websocket URL (default="ws://127.0.0.1:6006/")
+
+    full (bool):
+        True if downloading the full ledger (starting from the current ledger
+        and walking back to the genesis ledger). False if the download should
+        stop at the last current ledger (i.e., the last time grapple was run).
+        (default=True)
+
+    genesis (int):
+        Genesis block index.  If full=True, this is where the download ends;
+        otherwise, this value is ignored. (default=152370)
+    
+    quiet (bool):
+        If True, suppress console output. (default=True)
+    
+    resampling_frequencies (tuple):
+        Resampling frequencies, using pandas frequency codes.  If None, then
+        resampling is disabled. (default=('D',) or daily)
+
 It can also be run as a script::
 
     python grapple.py [-flags]
