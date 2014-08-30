@@ -13,3 +13,5 @@ __copyright__  = "Copyright 2014, Dyffy Inc."
 __license__    = "MIT"
 __maintainer__ = "Jack Peterson"
 __email__      = "jack@tinybike.net"
+
+from .grapple import Grapple
