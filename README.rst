@@ -36,7 +36,7 @@ It can also be run as a script::
 
 Optional flags::
 
-    -w, --websocket [websocket_url]:
+    -w, --websocket [websocket url]:
         Specify the rippled websocket url. (default=ws://127.0.0.1:6006/)
 
     -p, --public:
@@ -45,7 +45,7 @@ Optional flags::
     -f, --full:
         Download the full Ripple ledger.  Automatic on your first run.
 
-    -g, --genesis:
+    -g, --genesis [ledger index]:
         Halting point for full downloads; ignored for partial downloads.
 
     -q, --quiet:
