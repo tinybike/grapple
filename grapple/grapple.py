@@ -109,7 +109,7 @@ class Grapple(object):
         self.ledger_current_index = None
         self.ledgers_to_read = None
         self.updates = 0
-        self.resampling_frequencies = ('D',)
+        self.resampling_frequencies = resampling_frequencies
 
     def get_current_index(self, retry=False):
         try:
