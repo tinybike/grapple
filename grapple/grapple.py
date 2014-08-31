@@ -131,6 +131,7 @@ class Grapple(object):
         self.ledger_current_index = None
         self.ledgers_to_read = None
         self.updates = 0
+        self.markets = None
         self.resampling_frequencies = resampling_frequencies
 
     def get_current_index(self, retry=False):
@@ -298,6 +299,13 @@ class Grapple(object):
                 duplicate = row[0]
         return duplicate
 
+    def find_markets(self):
+        query = "SELECT DISTINCT market FROM ripple_ledger"
+        with cursor() as cur:
+            cur.execute(query)
+            for row in cur:
+                self.markets.append(row[0])
+
     def resampler(self, df, freq='D'):
         df.txdate = pd.to_datetime(df.txdate, unit='s')
         df = df.set_index(df.txdate)
@@ -351,8 +359,8 @@ class Grapple(object):
             else:
                 last_resample = 0
             print "Resampling time series..."
-            for market in self.currency_pairs():
-                sys.stdout.write(market[0] + " " + market[1] + "\r")
+            for market in self.markets:
+                sys.stdout.write(market + "\r")
                 sys.stdout.flush()
 
                 # Resample all transactions
@@ -362,7 +370,7 @@ class Grapple(object):
                         "amount1, amount2, txdate FROM ripple_ledger "
                         "WHERE market = '%s' "
                         "ORDER BY txdate"
-                    ) % (market[0] + market[1])
+                    ) % market
 
                 # Resample transactions from the last resampling
                 # starting timestamp or newer
@@ -372,7 +380,7 @@ class Grapple(object):
                         "amount1, amount2, txdate FROM ripple_ledger "
                         "WHERE market = '%s' AND txdate >= '%s' "
                         "ORDER BY txdate"
-                    ) % ((market[0] + market[1]), last_resample)
+                    ) % (market, last_resample)
                 df = psql.frame_query(query, conn)
                 if not df.empty:
                     for f in freqs:
@@ -500,6 +508,7 @@ class Grapple(object):
         self.housekeeping()
         self.rippled_history()
         if self.resampling_frequencies is not None:
+            self.find_markets()
             self.resample_time_series()
 
 
