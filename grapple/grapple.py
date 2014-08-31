@@ -131,7 +131,8 @@ class Grapple(object):
         self.ledger_current_index = None
         self.ledgers_to_read = None
         self.updates = 0
-        self.markets = None
+        self.markets = []
+        self.quiet = quiet
         self.resampling_frequencies = resampling_frequencies
 
     def get_current_index(self, retry=False):
@@ -142,7 +143,8 @@ class Grapple(object):
                 if data and data['status'] == 'success':
                     if 'result' in data and 'ledger_current_index' in data['result']:
                         self.ledger_current_index = data['result']['ledger_current_index']
-                        print "Current ledger index:", self.ledger_current_index
+                        if not self.quiet:
+                            print "Current ledger index:", self.ledger_current_index
             else:
                 self.get_current_index(retry=True)
         except Exception as e:
@@ -214,6 +216,10 @@ class Grapple(object):
                             'issuer': None,
                         }
                     gets_idx, pays_idx = None, None
+                    if len(pays['currency']) > 10:
+                        pays['currency'] = pays['currency'][:10]
+                    if len(gets['currency']) > 10:
+                        gets['currency'] = gets['currency'][:10]
                     if gets['amount'] > 0 and pays['amount'] > 0:
                         pays['quantum'] = Decimal(currency_precision(pays['currency']))
                         pays['price'] = (gets['amount'] / pays['amount']).quantize(pays['quantum'])
@@ -284,10 +290,12 @@ class Grapple(object):
         for i in xrange(5):
             try:
                 self.socket = websocket.create_connection(self.socket_url)
-                print "Connected to", self.socket_url, "(attempt", str(i+1) + ")"
+                if not self.quiet:
+                    print "Connected to", self.socket_url, "(attempt", str(i+1) + ")"
                 return True
             except ValueError as e:
-                print "Error connecting to rippled", e
+                if not self.quiet:
+                    print "Error connecting to rippled", e
         return False
 
     def is_duplicate(self, tx_hash):
@@ -351,14 +359,14 @@ class Grapple(object):
         default, this method does daily ("D") resampling.
 
         """
-        freq = self.resampling_frequencies
         with cursor() as cur:
             cur.execute("SELECT max(starttime) FROM resampled_ledger")
             if cur.rowcount:
                 last_resample = str(cur.fetchone()[0])
             else:
                 last_resample = 0
-            print "Resampling time series..."
+            if not self.quiet:
+                print "Resampling time series..."
             for market in self.markets:
                 sys.stdout.write(market + "\r")
                 sys.stdout.flush()
@@ -383,18 +391,20 @@ class Grapple(object):
                     ) % (market, last_resample)
                 df = psql.frame_query(query, conn)
                 if not df.empty:
-                    for f in freqs:
+                    for f in self.resampling_frequencies:
                         rs = self.resampler(df, freq=f)
                         self.write_resampled(rs, market, cur, freq=f)
                     conn.commit()
-            print
-            print self.updates, "resampled_ledger records updated"
-            print
+            if not self.quiet:
+                print
+                print self.updates, "resampled_ledger records updated"
+                print
 
         # Index the columns: starttime, freq, currency1, currency2
         conn.set_isolation_level(ext.ISOLATION_LEVEL_AUTOCOMMIT)
         with cursor() as cur:
-            print "Indexing..."
+            if not self.quiet:
+                print "Indexing..."
             idx_queries = (
                 "DROP INDEX IF EXISTS idx_ledger_interval",
                 (
@@ -425,7 +435,8 @@ class Grapple(object):
                 "close2 numeric(24,8),"
                 "volume1 numeric(24,8),"
                 "volume2 numeric(24,8),"
-                "medprice1 numeric(24,8))"
+                "price1 numeric(24,8),"
+                "price2 numeric(24,8))"
             ), (
                 "CREATE TABLE ripple_ledger ("
                 "internalid bigserial NOT NULL PRIMARY KEY,"
@@ -466,20 +477,22 @@ class Grapple(object):
             self.get_current_index()
             if not self.full:
                 self.find_target_ledger()
-            print "Reading from ledger", self.ledger_current_index, "to", self.halt
+            if not self.quiet:
+                print "Reading from ledger", self.ledger_current_index, "to", self.halt
             self.ledgers_to_read = self.ledger_current_index - self.halt
             self.ledger_index = self.ledger_current_index - 1
             self.stored_tx = 0
             while self.ledger_index >= self.halt:
                 try:
                     ledger = self.read_next_ledger()
-                    ledgers_read = self.ledger_current_index - self.ledger_index - 1
-                    progress = round(float(ledgers_read) / float(self.ledgers_to_read), 3)
-                    sys.stdout.write("Read " + str(ledgers_read) + "/" +\
-                                     str(self.ledgers_to_read) + " [" +\
-                                     str(progress * 100) + "%] ledgers (" +\
-                                     str(self.stored_tx) + " transactions)\r")
-                    sys.stdout.flush()
+                    if not self.quiet:
+                        ledgers_read = self.ledger_current_index - self.ledger_index - 1
+                        progress = round(float(ledgers_read) / float(self.ledgers_to_read), 3)
+                        sys.stdout.write("Read " + str(ledgers_read) + "/" +\
+                                         str(self.ledgers_to_read) + " [" +\
+                                         str(progress * 100) + "%] ledgers (" +\
+                                         str(self.stored_tx) + " transactions)\r")
+                        sys.stdout.flush()
                     if ledger is not None:
                         tx_hash_list, accepted = self.parse_ledger(ledger)
                         if tx_hash_list is not None:
@@ -496,7 +509,7 @@ class Grapple(object):
                 except Exception as exc:
                     print exc
             self.socket.close()
-            print
+            if not self.quiet: print
             return True
         return False
 
@@ -569,7 +582,7 @@ def main(argv=None):
         elif opt in ('-w', '--websocket'):
             parameters['socket_url'] = arg
         elif opt in ('-g', '--genesis'):
-            parameters['genesis'] = arg
+            parameters['genesis'] = int(arg)
     
     Grapple(**parameters).download()
 
