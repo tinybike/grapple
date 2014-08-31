@@ -307,13 +307,6 @@ class Grapple(object):
                 duplicate = row[0]
         return duplicate
 
-    def find_markets(self):
-        query = "SELECT DISTINCT market FROM ripple_ledger"
-        with cursor() as cur:
-            cur.execute(query)
-            for row in cur:
-                self.markets.append(row[0])
-
     def resampler(self, df, freq='D'):
         df.txdate = pd.to_datetime(df.txdate, unit='s')
         df = df.set_index(df.txdate)
@@ -349,6 +342,13 @@ class Grapple(object):
             cur.execute(query, tuple(row))
             self.updates += 1
 
+    def find_markets(self):
+        query = "SELECT DISTINCT currency1, currency2 FROM ripple_ledger"
+        with cursor() as cur:
+            cur.execute(query)
+            for row in cur:
+                self.markets.append((row[0], row[1]))
+
     def resample_time_series(self):
         """OHLC time series resampler.
         
@@ -368,7 +368,7 @@ class Grapple(object):
             if not self.quiet:
                 print "Resampling time series..."
             for market in self.markets:
-                sys.stdout.write(market + "\r")
+                sys.stdout.write(market[0] + "-" + market[1] + "\r")
                 sys.stdout.flush()
 
                 # Resample all transactions
@@ -378,7 +378,7 @@ class Grapple(object):
                         "amount1, amount2, txdate FROM ripple_ledger "
                         "WHERE market = '%s' "
                         "ORDER BY txdate"
-                    ) % market
+                    ) % (market[0] + market[1])
 
                 # Resample transactions from the last resampling
                 # starting timestamp or newer
@@ -388,7 +388,7 @@ class Grapple(object):
                         "amount1, amount2, txdate FROM ripple_ledger "
                         "WHERE market = '%s' AND txdate >= '%s' "
                         "ORDER BY txdate"
-                    ) % (market, last_resample)
+                    ) % (market[0] + market[1], last_resample)
                 df = psql.frame_query(query, conn)
                 if not df.empty:
                     for f in self.resampling_frequencies:
