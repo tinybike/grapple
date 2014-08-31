@@ -7,11 +7,7 @@ except:
     pass
 
 __title__      = "grapple"
-<<<<<<< Updated upstream
-__version__    = "0.1.2"
-=======
-__version__    = "0.1.1"
->>>>>>> Stashed changes
+__version__    = "0.2"
 __author__     = "Jack Peterson"
 __copyright__  = "Copyright 2014, Dyffy Inc."
 __license__    = "MIT"
