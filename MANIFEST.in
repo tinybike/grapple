@@ -1,1 +1,1 @@
-include MANIFEST.in LICENSE.txt README.rst
+include MANIFEST.in LICENSE.txt README.rst requirements.txt test_requirements.txt

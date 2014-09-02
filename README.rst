@@ -22,7 +22,7 @@ The easiest way to install Grapple is using pip::
 
 Grapple is designed to integrate with PostgreSQL, using connection information in config.py.  By default, it assumes that your database is located on localhost (127.0.0.1), and that your database's name, password, username and are all "grapple".
 
-(While this is certainly not the most secure setup, it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
+(While this is certainly not a secure setup, it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
 
 Usage
 ^^^^^
@@ -72,7 +72,7 @@ Optional flags::
         Download the full Ripple ledger.  Automatic on your first run.
 
     -g, --genesis [ledger index]:
-        Halting point for full downloads; ignored for partial downloads.
+        Genesis ledger index and download halting point.
 
     -q, --quiet:
         Suppress command line output.
