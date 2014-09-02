@@ -72,3 +72,10 @@ Optional flags::
 
     -q, --quiet:
         Suppress command line output.
+
+Tests
+^^^^^
+
+
+
+Copyright 2014, Dyffy Inc.  License: MIT
