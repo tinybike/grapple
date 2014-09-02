@@ -7,7 +7,6 @@ Grapple
 .. image:: https://coveralls.io/repos/tensorjack/grapple/badge.png
   :target: https://coveralls.io/r/tensorjack/grapple
 
-
 Grapple extracts the ledger from rippled via websocket.  It starts at the current ledger index, and walks backwards until it reaches the genesis ledger.  The genesis ledger index is set by default to 152370, but is adjustable.
 
 Grapple can collect data from a local or remote rippled instance.  If you have a local rippled instance running that has downloaded all or most of the ledger, I strongly recommend doing local data collection.  Fetching data from Ripple's public websocket is very slow!
@@ -21,7 +20,7 @@ The easiest way to install Grapple is using pip::
 
     pip install grapple
 
-Grapple is designed to integrate with PostgreSQL, using connection information in config.py.  By default, it assumes that your database is located on localhost (127.0.0.1), and that your database username, password, and password are all "grapple".
+Grapple is designed to integrate with PostgreSQL, using connection information in config.py.  By default, it assumes that your database is located on localhost (127.0.0.1), and that your database's name, password, username and are all "grapple".
 
 (While this is certainly not the most secure setup, it may be convenient for people who install Grapple via pip, and do not wish to edit its source code.)
 
