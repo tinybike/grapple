@@ -7,7 +7,6 @@ Grapple
 .. image:: https://coveralls.io/repos/tensorjack/grapple/badge.png
   :target: https://coveralls.io/r/tensorjack/grapple
 
-Download the Ripple ledger from rippled.
 
 Grapple extracts the ledger from rippled via websocket.  It starts at the current ledger index, and walks backwards until it reaches the genesis ledger.  The genesis ledger index is set by default to 152370, but is adjustable.
 

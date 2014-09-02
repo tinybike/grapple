@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-"""
-Grapple unit tests.
+"""Grapple unit tests.
 
-Remove the leading underscore from _test_init_fullrun and
-_test_init_smallrun to do download tests, if your machine
-has a working rippled and Postgres installation.
+Remove the leading underscore from _test_init_fullrun and _test_init_smallrun
+to do download tests, if your machine has a working rippled and Postgres
+installation.
 
-The other tests are run off Ripple Labs' public websocket,
-and do not test the methods that require a database connection.
+The other tests are run by connecting to Ripple Labs' public websocket.
+At the moment, there are no tests for the methods that require a
+database connection.
 
 """
 from __future__ import division, print_function, unicode_literals, absolute_import
@@ -26,7 +26,7 @@ import psycopg2.extensions as ext
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(HERE, os.pardir, "grapple"))
 
-from grapple import *
+from grapple import Grapple
 
 class TestGrapple(unittest.TestCase):
 
