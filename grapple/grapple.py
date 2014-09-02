@@ -95,7 +95,7 @@ import psycopg2 as db
 import psycopg2.extensions as ext
 
 # Python 3 compatibility
-from dipy.utils.six.moves import xrange
+from six.moves import xrange as range
 _IS_PYTHON_3 = sys.version_info[0] == 3
 identity = lambda x : x
 if _IS_PYTHON_3:
@@ -302,7 +302,7 @@ class Grapple(object):
             return json.loads(ledger)
     
     def rippled_connect(self):
-        for i in xrange(5):
+        for i in range(5):
             try:
                 self.socket = websocket.create_connection(self.socket_url)
                 if not self.quiet:
@@ -339,7 +339,7 @@ class Grapple(object):
 
     def write_resampled(self, rs, market, cur, freq='D'):
         nrows = rs.shape[0]
-        for i in xrange(nrows):
+        for i in range(nrows):
             row = [rs.index[i], freq, market[0], market[1]]
             vals = rs[i:i+1].values.flatten().tolist()
             if np.isnan(np.sum(vals)):
