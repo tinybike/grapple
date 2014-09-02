@@ -2,8 +2,15 @@
 """
 Grapple unit tests.
 
+Remove the leading underscore from _test_init_fullrun and
+_test_init_smallrun to do download tests, if your machine
+has a working rippled and Postgres installation.
+
+The other tests are run off Ripple Labs' public websocket,
+and do not test the methods that require a database connection.
+
 """
-from __future__ import division, print_function, unicode_literals
+from __future__ import division, print_function, unicode_literals, absolute_import
 try:
     import sys
     import cdecimal
@@ -17,8 +24,7 @@ import psycopg2 as db
 import psycopg2.extensions as ext
 
 HERE = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(HERE, os.pardir, "grapple"))
-sys.path.append(HERE)
+sys.path.insert(0, os.path.join(HERE, os.pardir, "grapple"))
 
 from grapple import *
 
@@ -29,13 +35,15 @@ class TestGrapple(unittest.TestCase):
         self.grapple = Grapple(socket_url="wss://s1.ripple.com:51233/")
         self.assertIsNone(self.grapple.socket)        
 
-    def test_init_full(self):
+    def _test_init_fullrun(self):
         self.grapple = Grapple(full=True)
         self.assertTrue(self.grapple.full)
+        self.grapple.download()
         
-    def test_init_genesis(self):
+    def _test_init_smallrun(self):
         self.grapple = Grapple(genesis=8642812)
         self.assertEqual(self.grapple.halt, 8642812)
+        self.grapple.download()
 
     def test_init_resampling_frequencies(self):
         self.grapple = Grapple(resampling_frequencies=('8T', '12T'))
