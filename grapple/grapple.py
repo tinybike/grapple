@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Download the Ripple ledger from rippled.
+"""Ripple ledger extractor.
 
 Grapple extracts the ledger from rippled via websocket.  It starts at the
 current ledger index, and walks backwards until it reaches the genesis ledger.
@@ -9,21 +9,22 @@ If you have previously run Grapple, data will only be collected from the
 current ledger to the maximum ledger index previously recorded.  Just set
 the "full" flag if you prefer to re-download the entire ledger.
 
-Grapple can collect data from a local or remote rippled instance.  If you have
+Data can be collected from a local or a remote rippled instance.  If you have
 a local rippled instance running that has downloaded all or most of the ledger,
 I strongly recommend doing local data collection.  Fetching data from Ripple's
 public websocket is very slow!
 
-Also resamples the transaction time series to create "Open-Hi-Lo-Close" data,
-which can be useful for statistical tests, or simply for drawing charts.
+Grapple also resamples each currency pair's price time series to create
+"Open-Hi-Lo-Close" time series.  These resampled datasets can be useful for
+statistical tests, technical market analysis, or simply for drawing charts.
 
 Grapple is designed to integrate with PostgreSQL, using connection information
 in config.py.  By default, it assumes that your database is located on
-localhost (127.0.0.1), and that your database username, password, and password
+localhost (127.0.0.1), and that your database's name, password, username and
 are all "grapple".
 
-(While this is certainly not the most secure setup, it may be convenient for
-people who install Grapple via pip, and do not wish to edit its source code.)
+(While this is certainly not a secure setup, it may be convenient for people
+who install Grapple via pip, and do not wish to edit its source code.)
 
 Usage as a Python module:
 
@@ -44,7 +45,7 @@ The Grapple constructor accepts the following keyword arguments:
         (default=True)
 
     genesis (int):
-        Genesis ledger index; download halting point. (default=152370)
+        Genesis ledger index and download halting point. (default=152370)
     
     quiet (bool):
         If True, suppress console output. (default=True)
@@ -69,7 +70,7 @@ Optional flags:
         Download the full Ripple ledger.  Automatic on first run.
 
     -g, --genesis [ledger index]:
-        Halting point for full downloads; ignored for partial downloads.
+        Genesis ledger index and download halting point.
 
     -q, --quiet:
         Suppress command line output.
