@@ -14,4 +14,4 @@ install:
 script:
   - py.test test/test_grapple.py --doctest-modules -v --cov grapple --cov-report term-missing
 after_success:
-  - grapple
+  - coveralls

@@ -7,11 +7,11 @@ Grapple
 .. image:: https://coveralls.io/repos/tensorjack/grapple/badge.png
   :target: https://coveralls.io/r/tensorjack/grapple
 
-Grapple extracts the ledger from rippled via websocket.  It starts at the current ledger index, and walks backwards until it reaches the genesis ledger.  The genesis ledger index is set by default to 152370, but is adjustable.
+Grapple extracts the full Ripple ledger directly from rippled via websocket.  It queries rippled for the current ledger index, then walks backwards until it reaches the genesis ledger, recording every transaction it finds.
 
-Grapple can collect data from a local or remote rippled instance.  If you have a local rippled instance running that has downloaded all or most of the ledger, I strongly recommend doing local data collection.  Fetching data from Ripple's public websocket is very slow!
+Data can be collected from a local or a remote rippled instance.  If you have a local rippled instance running that has downloaded all or most of the ledger, I strongly recommend doing local data collection.  Fetching data from Ripple's public websocket is very slow!
 
-Also resamples the transaction time series to create "Open-Hi-Lo-Close" data, which can be useful for statistical tests, or simply for drawing charts.
+Grapple also resamples each currency pair's price time series to create "Open-Hi-Lo-Close" time series.  These resampled datasets can be used for statistical tests, technical market analysis, or simply for drawing charts.
 
 Installation
 ^^^^^^^^^^^^
@@ -80,6 +80,6 @@ Optional flags::
 Tests
 ^^^^^
 
-Unit tests are in the test/ directory.  Coverage is not wonderful at the moment, but slowly improving!
+Unit tests are in the test/ directory.  Coverage is limited at the moment, but slowly improving!
 
 Note: tests that require a local rippled and/or Postgres database connection are disabled by default.  See test/test_grapple.py for details.
