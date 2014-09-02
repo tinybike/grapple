@@ -93,9 +93,9 @@ import pandas.io.sql as psql
 import numpy as np
 import psycopg2 as db
 import psycopg2.extensions as ext
-from config import *
 
 # Python 3 compatibility
+from dipy.utils.six.moves import xrange
 _IS_PYTHON_3 = sys.version_info[0] == 3
 identity = lambda x : x
 if _IS_PYTHON_3:
@@ -104,6 +104,8 @@ else:
     import codecs
     def u(string):
         return codecs.unicode_escape_decode(string)[0]
+
+from config import *
 
 getcontext().rounding = ROUND_HALF_EVEN
 
