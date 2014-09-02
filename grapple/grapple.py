@@ -76,7 +76,7 @@ Optional flags:
         Suppress command line output.
 
 """
-from __future__ import division
+from __future__ import division, print_function, unicode_literals, absolute_import
 import sys
 try:
     import cdecimal
@@ -93,8 +93,17 @@ import pandas.io.sql as psql
 import numpy as np
 import psycopg2 as db
 import psycopg2.extensions as ext
-from psycopg2.extras import RealDictCursor
 from config import *
+
+# Python 3 compatibility
+_IS_PYTHON_3 = sys.version_info[0] == 3
+identity = lambda x : x
+if _IS_PYTHON_3:
+    u = identity
+else:
+    import codecs
+    def u(string):
+        return codecs.unicode_escape_decode(string)[0]
 
 getcontext().rounding = ROUND_HALF_EVEN
 
@@ -144,11 +153,12 @@ class Grapple(object):
                     if 'result' in data and 'ledger_current_index' in data['result']:
                         self.ledger_current_index = data['result']['ledger_current_index']
                         if not self.quiet:
-                            print "Current ledger index:", self.ledger_current_index
+                            print("Current ledger index:", self.ledger_current_index)
             else:
                 self.get_current_index(retry=True)
         except Exception as e:
-            print e
+            if not self.quiet:
+                print(e)
             if retry:
                 return
             self.get_current_index(retry=True)
@@ -169,7 +179,8 @@ class Grapple(object):
                     }
                     return tx_data['result'], options
         except Exception as exc:
-            print exc
+            if not self.quiet:
+                print(exc)
         return False, False
 
     def parse_tx(self, tx, accepted, ledger_time=None, tx_hash=None):
@@ -261,7 +272,8 @@ class Grapple(object):
                                 cur.execute(sql, records)
                                 stored_tx_count += 1
                         except Exception as exc:
-                            print exc
+                            if not self.quiet:
+                                print(exc)
         return stored_tx_count
 
     def parse_ledger(self, data):
@@ -291,11 +303,11 @@ class Grapple(object):
             try:
                 self.socket = websocket.create_connection(self.socket_url)
                 if not self.quiet:
-                    print "Connected to", self.socket_url, "(attempt", str(i+1) + ")"
+                    print("Connected to", self.socket_url, "(attempt", str(i+1) + ")")
                 return True
             except ValueError as e:
                 if not self.quiet:
-                    print "Error connecting to rippled", e
+                    print("Error connecting to rippled", e)
         return False
 
     def is_duplicate(self, tx_hash):
@@ -366,7 +378,7 @@ class Grapple(object):
             else:
                 last_resample = 0
             if not self.quiet:
-                print "Resampling time series..."
+                print("Resampling time series...")
             for market in self.markets:
                 sys.stdout.write(market[0] + "-" + market[1] + "\r")
                 sys.stdout.flush()
@@ -395,16 +407,15 @@ class Grapple(object):
                         rs = self.resampler(df, freq=f)
                         self.write_resampled(rs, market, cur, freq=f)
                     conn.commit()
-            if not self.quiet:
-                print
-                print self.updates, "resampled_ledger records updated"
-                print
+            print()
+            print(self.updates, "resampled_ledger records updated")
+            print()
 
         # Index the columns: starttime, freq, currency1, currency2
         conn.set_isolation_level(ext.ISOLATION_LEVEL_AUTOCOMMIT)
         with cursor() as cur:
             if not self.quiet:
-                print "Indexing..."
+                print("Indexing...")
             idx_queries = (
                 "DROP INDEX IF EXISTS idx_ledger_interval",
                 (
@@ -478,7 +489,7 @@ class Grapple(object):
             if not self.full:
                 self.find_target_ledger()
             if not self.quiet:
-                print "Reading from ledger", self.ledger_current_index, "to", self.halt
+                print("Reading from ledger", self.ledger_current_index, "to", self.halt)
             self.ledgers_to_read = self.ledger_current_index - self.halt
             self.ledger_index = self.ledger_current_index - 1
             self.stored_tx = 0
@@ -507,9 +518,9 @@ class Grapple(object):
                                                                     **options)
                     self.ledger_index -= 1
                 except Exception as exc:
-                    print exc
+                    print(exc)
             self.socket.close()
-            if not self.quiet: print
+            if not self.quiet: print()
             return True
         return False
 
@@ -526,19 +537,16 @@ class Grapple(object):
 
 
 @contextmanager
-def cursor(cursor_factory=False):
+def cursor():
     """Database cursor generator. Commit on context exit."""
     try:
-        if cursor_factory:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-        else:
-            cur = conn.cursor()
+        cur = conn.cursor()
         yield cur
     except (db.Error, Exception) as e:
         cur.close()
         if conn:
             conn.rollback()
-        print e.message
+        print(e.message)
         raise
     else:
         conn.commit()
@@ -557,12 +565,12 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
     try:
-        short_opts = 'hrfqw:g:'
-        long_opts = ['help', 'remote', 'full', 'quiet', 'websocket=', 'g=']
+        short_opts = 'hpfqw:g:'
+        long_opts = ['help', 'public', 'full', 'quiet', 'websocket=', 'genesis=']
         opts, vals = getopt.getopt(argv[1:], short_opts, long_opts)
     except getopt.GetoptError as e:
-        print >>sys.stderr, e.msg
-        print >>sys.stderr, "for help use --help"
+        sys.stderr.write(e.msg)
+        sys.stderr.write("for help use --help")
         return 2
     parameters = {
         'full': False,
@@ -571,7 +579,7 @@ def main(argv=None):
     }
     for opt, arg in opts:
         if opt in ('-h', '--help'):
-            print __doc__
+            print(__doc__)
             return 0
         elif opt in ('-p', '--public'):
             parameters['socket_url'] = RIPPLE_PUBLIC_WEBSOCKET
