@@ -6,11 +6,12 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
-# command to install dependencies
 install:
   - "easy_install -U setuptools"
   - "pip install ."
   - "pip install -r requirements.txt"
-  - "python setup.py install"
-# command to run tests
-script: python test/test_grapple.py
+  - "pip install -r test_requirements.txt"
+script:
+  - py.test test/test_grapple.py --doctest-modules -v --cov grapple --cov-report term-missing
+after_success:
+  - grapple
