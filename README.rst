@@ -11,7 +11,7 @@ Grapple extracts the full Ripple ledger directly from rippled via websocket.  It
 
 Data can be collected from a local or a remote rippled instance.  If you have a local rippled instance running that has downloaded all or most of the ledger, I strongly recommend doing local data collection.  Fetching data from Ripple's public websocket is very slow!
 
-Grapple also resamples each currency pair's price time series to create "Open-Hi-Lo-Close" time series.  These resampled datasets can be used for statistical tests, technical market analysis, or simply for drawing charts.
+Grapple also resamples each currency pair's price time series to create "Open-Hi-Lo-Close" time series.  These resampled datasets can be useful for statistical tests, technical market analysis, or simply for drawing charts.
 
 Installation
 ^^^^^^^^^^^^
