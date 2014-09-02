@@ -83,6 +83,7 @@ try:
     sys.modules["decimal"] = cdecimal
 except:
     pass
+import os
 import getopt
 import json
 import websocket
@@ -108,8 +109,9 @@ else:
 getcontext().rounding = ROUND_HALF_EVEN
 
 # Postgres connection
-conn = db.connect(POSTGRES_CONNECTION_STRING)
-conn.set_isolation_level(ext.ISOLATION_LEVEL_READ_COMMITTED)
+if not os.environ.get("CONTINUOUS_INTEGRATION"):
+    conn = db.connect(POSTGRES_CONNECTION_STRING)
+    conn.set_isolation_level(ext.ISOLATION_LEVEL_READ_COMMITTED)
 
 class Grapple(object):
 
