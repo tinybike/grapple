@@ -44,8 +44,7 @@ The Grapple constructor accepts the following keyword arguments:
         (default=True)
 
     genesis (int):
-        Genesis block index.  If full=True, this is where the download ends;
-        otherwise, this value is ignored. (default=152370)
+        Genesis ledger index; download halting point. (default=152370)
     
     quiet (bool):
         If True, suppress console output. (default=True)
@@ -386,7 +385,7 @@ class Grapple(object):
                 sys.stdout.flush()
 
                 # Resample all transactions
-                if self.full:
+                if self.full or last_resample == 'None':
                     query = (
                         "SELECT currency1, currency2, price1, price2, "
                         "amount1, amount2, txdate FROM ripple_ledger "
