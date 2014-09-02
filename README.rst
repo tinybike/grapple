@@ -82,6 +82,6 @@ Optional flags::
 Tests
 ^^^^^
 
-Unit tests are in `test/`.  Coverage is not wonderful at the moment, but slowly improving!  Note that tests that require a local rippled connection and/or Postgres database connection are disabled by default.  See `test/test_grapple.py` for details.
+Unit tests are in test/.  Coverage is not wonderful at the moment, but slowly improving!  Note that tests that require a local rippled connection and/or Postgres database connection are disabled by default.  See test/test_grapple.py for details.
 
 Copyright 2014, Dyffy Inc.  License: MIT
