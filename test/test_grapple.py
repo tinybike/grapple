@@ -18,10 +18,15 @@ try:
 except:
     pass
 import os
-import unittest
+import platform
 from decimal import Decimal, getcontext, ROUND_HALF_EVEN
 import psycopg2 as db
 import psycopg2.extensions as ext
+
+if platform.python_version() < "2.7":
+    unittest = __import__("unittest2")
+else:
+    import unittest
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(HERE, os.pardir, "grapple"))
