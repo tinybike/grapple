@@ -13,6 +13,8 @@ Data can be collected from a local or a remote rippled instance.  If you have a 
 
 Grapple also resamples each currency pair's price time series to create "Open-Hi-Lo-Close" time series.  These resampled datasets can be useful for statistical tests, technical market analysis, or simply for drawing charts.
 
+My Bitcoin address is 1BskhsboJofcEnqCqCJjjJia6oovRqvKtq, and my Ripple address is rLvcQ6ctvr12aQq29AcZT6JMWH7iZ8esHS (~tinybike on RippleTrade).  Donations are greatly appreciated -- writing open-source software is thirsty work!
+
 Installation
 ^^^^^^^^^^^^
 
