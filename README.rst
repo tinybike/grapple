@@ -7,6 +7,9 @@ Grapple
 .. image:: https://coveralls.io/repos/tensorjack/grapple/badge.png
   :target: https://coveralls.io/r/tensorjack/grapple
 
+.. image:: https://badge.fury.io/py/grapple.svg
+    :target: http://badge.fury.io/py/grapple
+
 Grapple extracts the full Ripple ledger directly from rippled via websocket.  It queries rippled for the current ledger index, then walks backwards until it reaches the genesis ledger, recording every transaction it finds.
 
 Data can be collected from a local or a remote rippled instance.  If you have a local rippled instance running that has downloaded all or most of the ledger, I strongly recommend doing local data collection.  Fetching data from Ripple's public websocket is very slow!
