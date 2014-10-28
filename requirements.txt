@@ -1,9 +1,9 @@
 argparse==1.2.1
 backports.ssl-match-hostname==3.4.0.2
-numpy==1.8.2
+numpy==1.9.0
 pandas==0.14.1
 psycopg2==2.5.3
 python-dateutil==2.2
 pytz==2014.4
-six==1.7.3
+six==1.8.0
 websocket-client==0.17.0

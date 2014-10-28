@@ -16,6 +16,6 @@ setup(
     url="https://github.com/tensorjack/grapple",
     download_url = "https://github.com/tensorjack/grapple/tarball/0.2.2",
     packages=["grapple"],
-    install_requires=["psycopg2", "websocket-client", "numpy", "pandas"],
+    install_requires=["psycopg2", "websocket-client", "numpy", "pandas", "six"],
     keywords = ["ripple", "rippled", "ledger", "download", "data"]
 )
