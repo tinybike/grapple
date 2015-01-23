@@ -1,11 +1,11 @@
 Grapple
 =======
 
-.. image:: https://travis-ci.org/tensorjack/grapple.svg?branch=master
-    :target: https://travis-ci.org/tensorjack/grapple
+.. image:: https://travis-ci.org/tinybike/grapple.svg?branch=master
+    :target: https://travis-ci.org/tinybike/grapple
 
-.. image:: https://coveralls.io/repos/tensorjack/grapple/badge.png
-  :target: https://coveralls.io/r/tensorjack/grapple
+.. image:: https://coveralls.io/repos/tinybike/grapple/badge.png
+  :target: https://coveralls.io/r/tinybike/grapple
 
 .. image:: https://badge.fury.io/py/grapple.svg
     :target: http://badge.fury.io/py/grapple
@@ -16,9 +16,10 @@ Data can be collected from a local or a remote rippled instance.  If you have a 
 
 Grapple also resamples each currency pair's price time series to create "Open-Hi-Lo-Close" time series.  These resampled datasets can be useful for statistical tests, technical market analysis, or simply for drawing charts.
 
-Donations: 14sqtQRWuWqa7SCtS1iSjt1FexSxfwnw7G
+Donations::
 
-~tinybike @ RippleTrade
+    Bitcoin: 1NUqhGjJEedXxUSxJThfDAHzF2mFosk3fo
+    Ripple: ~tinybike (rLvcQ6ctvr12aQq29AcZT6JMWH7iZ8esHS)
 
 Installation
 ^^^^^^^^^^^^
@@ -34,7 +35,9 @@ Grapple is designed to integrate with PostgreSQL, using connection information i
 Usage
 ^^^^^
 
-Grapple can be used as a Python module::
+Grapple can be used as a Python module:
+
+.. code-block:: python
 
     from grapple import Grapple
 
