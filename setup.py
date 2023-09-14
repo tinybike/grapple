@@ -1,21 +1,23 @@
 #!/usr/bin/env python
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
+
+from pathlib import Path
+long_description = (Path(__file__).parent / "README.md").read_text()
+
+
 
 setup(
     name="grapple",
-    version="0.2.2",
-    description="Ripple ledger extractor",
+    version="0.3.0",
+    description="Deprecated. Use wagtail-grapple instead",
     author="Jack Peterson",
     author_email="<jack@tinybike.net>",
-    maintainer="Jack Peterson",
-    maintainer_email="<jack@tinybike.net>",
     license="MIT",
-    url="https://github.com/tensorjack/grapple",
-    download_url = "https://github.com/tensorjack/grapple/tarball/0.2.2",
+    url="https://github.com/torchbox/wagtail-grapple",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=["grapple"],
-    install_requires=["psycopg2", "websocket-client", "numpy", "pandas", "six"],
-    keywords = ["ripple", "rippled", "ledger", "download", "data"]
+    install_requires=[],
+    keywords = ["deprecated"],
+    classifiers=["Development Status :: 7 - Inactive"],
 )
